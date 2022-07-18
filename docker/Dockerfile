@@ -23,16 +23,20 @@ RUN docker-php-ext-install -j$(nproc) iconv pdo pdo_mysql zip exif \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl
 
+RUN apt-get install -y \
+        librabbitmq-dev \
+        libssh-dev \
+    && docker-php-ext-install \
+        bcmath \
+        sockets \
+    && pecl install amqp \
+    && docker-php-ext-enable amqp
+
 # Xdebug
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 # APCu cache
 RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
-
-# Redis
-RUN pecl install -o -f redis \
-    &&  rm -rf /tmp/pear \
-    &&  docker-php-ext-enable redis
 
 RUN apt-get clean all
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
