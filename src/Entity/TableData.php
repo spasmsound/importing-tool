@@ -23,7 +23,7 @@ class TableData
     private bool $valid;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private string $comment;
+    private string $error;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $value;
@@ -76,14 +76,14 @@ class TableData
         $this->valid = $valid;
     }
 
-    public function getComment(): string
+    public function getError(): string
     {
-        return $this->comment;
+        return $this->error;
     }
 
-    public function setComment(string $comment): void
+    public function setError(string $error): void
     {
-        $this->comment = $comment;
+        $this->error = $error;
     }
 
     public function getValue(): ?string

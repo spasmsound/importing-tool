@@ -84,6 +84,7 @@ class UploadFileCommand extends Command
         $importProcess->setStatus(ImportProcess::STATUS_QUEUED);
         $tempData = new TemporaryDataStorage();
         $tempData->setData($sheet->toArray());
+        $tempData->setCountOfCells($this->countCells($sheet->toArray()));
         $importProcess->setTemporaryDataStorage($tempData);
 
         $this->entityManager->persist($importProcess);
@@ -95,5 +96,19 @@ class UploadFileCommand extends Command
         $this->messageBus->dispatch($importProcessMessage);
 
         return self::SUCCESS;
+    }
+
+    protected function countCells(array $data): int
+    {
+        $count = 0;
+        foreach ($data as $key => $values) {
+            if (0 === $key) {
+                continue;
+            }
+
+            $count += count($values);
+        }
+
+        return $count;
     }
 }

@@ -21,13 +21,17 @@ class TableContentImporterHandler
         $this->contentValidators = $contentValidators;
     }
 
-    public function __invoke(TableContentImporter $message)
+    public function __invoke(TableContentImporter $message): void
     {
         $importProcessId = $message->getImportProcessId();
 
         /** @var ImportProcess $importProcess */
         $importProcess = $this->entityManager->getRepository(ImportProcess::class)->find($importProcessId);
+        $tempData = $importProcess->getTemporaryDataStorage();
 
+        $importProcessHasWarning = false;
+
+        $count = 0;
         /** @var ValidatorInterface $validator */
         foreach ($this->contentValidators as $validator) {
             $error = $validator->validate($message->getData());
@@ -42,12 +46,33 @@ class TableContentImporterHandler
                 $tableData->setValid(true);
             } else {
                 $tableData->setValid(false);
-                $tableData->setComment($error);
+                $tableData->setError($error);
+
+                if (!$importProcessHasWarning) {
+                    $importProcessHasWarning = true;
+                }
             }
 
             $this->entityManager->persist($tableData);
+            $count++;
         }
 
+        $this->entityManager->flush();
+
+        if ($importProcess->getTableData()->count() !== $tempData->getCountOfCells()) {
+            return;
+        }
+
+        if ($importProcessHasWarning) {
+            $importProcess->setStatus(ImportProcess::STATUS_WARNING);
+        } else {
+            $importProcess->setStatus(ImportProcess::STATUS_SUCCESS);
+        }
+
+        $importProcess->setTemporaryDataStorage(null);
+        $this->entityManager->remove($tempData);
+
+        $this->entityManager->persist($importProcess);
         $this->entityManager->flush();
     }
 }

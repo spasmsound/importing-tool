@@ -5,7 +5,6 @@ namespace App\Messenger\MessageHandler;
 use App\Entity\ImportProcess;
 use App\Messenger\Message\ImportProcess as ImportProcessMessage;
 use App\Messenger\Message\TableContentImporter;
-use App\Service\Validator\ContentValidator\ValidatorInterface;
 use App\Service\Validator\TableStructureValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

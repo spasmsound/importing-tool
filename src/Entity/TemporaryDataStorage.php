@@ -16,24 +16,31 @@ class TemporaryDataStorage
     #[ORM\Column(type: 'array')]
     private array $data;
 
+    #[ORM\Column(type: "integer")]
+    private int $countOfCells;
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
         return $this->data;
     }
 
-    /**
-     * @param array $data
-     */
     public function setData(array $data): void
     {
         $this->data = $data;
+    }
+
+    public function getCountOfCells(): int
+    {
+        return $this->countOfCells;
+    }
+
+    public function setCountOfCells(int $countOfCells): void
+    {
+        $this->countOfCells = $countOfCells;
     }
 }

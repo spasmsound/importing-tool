@@ -14,7 +14,7 @@ class CodeValidator implements ValidatorInterface
     {
         $value = $data[$this->getListPosition()];
 
-        return 0 == $value || '' === $value ? $this->getErrorMessage() : null;
+        return 0 == $value || '' === $value ? null : $this->getErrorMessage();
     }
 
     public function getErrorMessage(): string

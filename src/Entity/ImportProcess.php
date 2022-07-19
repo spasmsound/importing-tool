@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Event\ImportProcessListener;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'app_import_process')]
+#[ORM\EntityListeners([ImportProcessListener::class])]
 class ImportProcess
 {
     public const STATUS_NEW = 0;
@@ -107,49 +109,31 @@ class ImportProcess
         return $this->tableData->contains($tableData);
     }
 
-    /**
-     * @return array
-     */
     public function getErrors(): array
     {
         return $this->errors;
     }
 
-    /**
-     * @param array $errors
-     */
     public function setErrors(array $errors): void
     {
         $this->errors = $errors;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
     }
 
-    /**
-     * @param DateTime $updatedAt
-     */
     public function setUpdatedAt(DateTime $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
 
-    /**
-     * @return TemporaryDataStorage|null
-     */
     public function getTemporaryDataStorage(): ?TemporaryDataStorage
     {
         return $this->temporaryDataStorage;
     }
 
-    /**
-     * @param TemporaryDataStorage|null $temporaryDataStorage
-     */
     public function setTemporaryDataStorage(?TemporaryDataStorage $temporaryDataStorage): void
     {
         $this->temporaryDataStorage = $temporaryDataStorage;
